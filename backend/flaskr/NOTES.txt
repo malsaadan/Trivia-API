@@ -29,5 +29,5 @@ TODO TASKS:
             [X] Test for failed case
 
         [X] POST category to get random question
-            [~] Test for successful case
-            [~] Test for failed case
+            [X] Test for successful case
+            [X] Test for failed case
