@@ -93,7 +93,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(len(data['questions']))
 
-    def test_422_if_book_creation_fails(self):
+    def test_400_if_book_creation_fails(self):
 
         new_question = {
             'question': 'What is the largest ocean of the world.',
@@ -104,9 +104,9 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().post('/questions', json = new_question)
         data = json.loads(res.data)
         
-        self.assertEqual(res.status_code, 422)
+        self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Unprocessable Entity')
+        self.assertEqual(data['message'], 'Bad Request')
 
     def test_search_questions(self):
         res = self.client().post('/questions/search', json = {'searchTerm': 'title'})
@@ -141,6 +141,33 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Resource Not Found')
+
+    def test_play_quiz(self):
+        data = {'quiz_category': {'type': 'Science', 'id': 1 }, 'previous_questions':[]}
+        res = self.client().post('/quizzes', json=data)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['question'])
+
+    def test_404_quiz_category_not_found(self):
+        data = {'quiz_category': {'type': 'Medical', 'id': 100 }, 'previous_questions':[]}
+        res = self.client().post('/quizzes', json=data)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Resource Not Found')
+    
+    def test_422_quiz_args_are_missing(self):
+        res = self.client().post('/quizzes', json={})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Bad Request')
+    
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

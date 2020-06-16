@@ -108,8 +108,9 @@ def create_app(test_config=None):
     # Get data from the body
     body = request.get_json()
 
+    # If the request doesn't contain the below keys return 400
     if not ('question' in body and 'answer' in body and 'category' in body and 'difficulty' in body):
-      abort(422)
+      abort(400)
 
     # Get each value
     new_question = body.get('question')
@@ -193,20 +194,47 @@ def create_app(test_config=None):
     abort(404)
 
 
+  @app.route('/quizzes', methods = ['POST'])
+  def play_quiz():
+    # Get data from the body
+    body = request.get_json()
 
-  '''
-  @TODO: 
-  Create a POST endpoint to get questions to play the quiz. 
-  This endpoint should take category and previous question parameters 
-  and return a random questions within the given category, 
-  if provided, and that is not one of the previous questions. 
+    # If body doesn't contain the two keys below return 400
+    if not ('quiz_category' in body and 'previous_questions' in body):
+      abort(400)
 
-  TEST: In the "Play" tab, after a user selects "All" or a category,
-  one question at a time is displayed, the user is allowed to answer
-  and shown whether they were correct or not. 
-  '''
+    # Extract data from the body
+    previous_questions = body.get('previous_questions')
+    quiz_category = body.get('quiz_category')
 
- 
+    # Get category id from the object and convert it to int
+    category_id = int(quiz_category.get('id'))
+
+    # If category id doesn't exist in the db return 404
+    if not Category.query.get(category_id):
+      abort(404)
+
+    # If the category is All
+    if category_id == 0:
+      # Get all questions that are not in the previous_questions list
+      available_questions = Question.query.filter(Question.id.notin_((previous_questions))).all()
+
+    else:
+      # If category is specified then filter the results based on that category and get all associated questions that are not in the previous_questions list
+      available_questions = Question.query.filter_by(category=category_id).filter(Question.id.notin_((previous_questions))).all()
+
+    # If there are no more available_questions return 404
+    if len(available_questions) == 0:
+      return abort(404)
+
+    question = random.choice(available_questions)
+    return jsonify({
+      'success': True,
+      'question': question.format()
+    })
+
+    
+  # Error handlers definitions
   @app.errorhandler(404)
   def not_found(error):
     return jsonify({
@@ -223,6 +251,12 @@ def create_app(test_config=None):
       'message': 'Unprocessable Entity'
     }), 422
 
-  return app
+  @app.errorhandler(400)
+  def bad_request(error):
+    return jsonify({
+      'success': False,
+      'error': 400,
+      'message': 'Bad Request'
+    }), 400
 
-    
+  return app

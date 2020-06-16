@@ -24,10 +24,10 @@ TODO TASKS:
             [X] Test for successful case
             [X] Test for failed case
 
-        [~] GET questions based on category
+        [X] GET questions based on category
+            [X] Test for successful case
+            [X] Test for failed case
+
+        [X] POST category to get random question
             [~] Test for successful case
             [~] Test for failed case
-
-        [ ] POST category to get random question
-            [ ] Test for successful case
-            [ ] Test for failed case
