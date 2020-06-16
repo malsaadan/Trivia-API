@@ -451,8 +451,16 @@ The API will return three error types when requests fail:
 
 ---
 
+## Future Work
+
+* Add an additional question field such as rating and make all corresponding updates (db, api endpoints, add question form, etc.)
+
+* Add users to the DB and track their game scores
+
+* Add capability to create new categories.
 
 ## References
+
 Please note that I have used these resources during my work on the project:
 
 * [Python Assert Example | Assert Statement In Python
