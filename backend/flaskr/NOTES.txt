@@ -1,0 +1,33 @@
+TODO TASKS:
+
+    CORS:
+        [X] Setup CORS
+        [X] Use after_request decorator
+
+
+    Endpoints:
+        [X] GET requests for all available categories
+
+        [X] GET requests for questions, including pagination
+            [X] Test for successful case
+            [X] Test for failed case
+
+        [X] DELETE question using a question ID
+            [X] Test for successful case
+            [X] Test for failed case
+
+        [X] POST a new question 
+            [X] Test for successful case
+            [X] Test for failed case
+
+        [X] POST a search term
+            [X] Test for successful case
+            [X] Test for failed case
+
+        [~] GET questions based on category
+            [~] Test for successful case
+            [~] Test for failed case
+
+        [ ] POST category to get random question
+            [ ] Test for successful case
+            [ ] Test for failed case
